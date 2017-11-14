@@ -1,14 +1,14 @@
 """Provides data augmentation"""
 import numpy as np
 
-from flip import flip_augment
-from rotate90 import rotate90_augment
-from blur import blur_augment
-from elastic_warp import elastic_warp_augment
-from misalign import misalign_augment
-from missing_section import missing_section_augment
-from rescale import rescale_augment
-from circle import circle_augment
+from .flip import flip_augment
+from .rotate90 import rotate90_augment
+from .blur import blur_augment
+from .elastic_warp import elastic_warp_augment
+from .misalign import misalign_augment
+from .missing_section import missing_section_augment
+from .rescale import rescale_augment
+from .circle import circle_augment
 
 class Augmentor:
   def __init__(self, params):
