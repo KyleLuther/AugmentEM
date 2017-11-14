@@ -22,6 +22,9 @@ class Augmentor:
       if aug not in self.params.keys():
         self.params[aug] = False
 
+  def __call__(self, img, labels=[]):
+    return self.augment(img, labels)
+
   def augment(self, img, labels=[]):
     """Augments example.
 
