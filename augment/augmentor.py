@@ -1,14 +1,19 @@
 """Provides data augmentation"""
 import numpy as np
 
-from .flip import flip_augment
-from .rotate90 import rotate90_augment
 from .blur import blur_augment
+from .box import box_augment
+from .circle import circle_augment
 from .elastic_warp import elastic_warp_augment
+from .flip import flip_augment
+from .grey import grey_augment
 from .misalign import misalign_augment
 from .missing_section import missing_section_augment
+from .noise import noise_augment
+from .rotate import rotate_augment
+from .rotate90 import rotate90_augment
 from .rescale import rescale_augment
-from .circle import circle_augment
+from .sin import sin_augment
 
 class Augmentor:
   def __init__(self, params):
@@ -16,8 +21,9 @@ class Augmentor:
     self._init_params()
 
   def _init_params(self):
-    augs = ['elastic_warp', 'flip', 'rot90', 'blur',
-            'misalign', 'missing_section', 'rescale', 'circle']
+    augs = ['blur', 'box', 'circle', 'elastic_warp', 'flip', 'grey',
+            'misalign', 'missing_section', 'noise', 'rotate', 'rotate90',
+            'rescale', 'sin']
     for aug in augs:
       if aug not in self.params.keys():
         self.params[aug] = False
@@ -47,25 +53,26 @@ class Augmentor:
 
     # Elastic warp
     if params['elastic_warp']:
-      n = params['elastic_grid_size']
+      n = params['elastic_n']
       max_sigma = params['elastic_sigma']
-      warp_d = params['elastic_d']
 
-      img, labels = elastic_warp_augment(img, labels, n,
-                                        max_sigma, warp_d, clamp_borders=True)
+      img, labels = elastic_warp_augment(img, labels, n, max_sigma)
 
     # Flip
     if params['flip']:
       img, labels = flip_augment(img, labels)
 
     # Rotate
-    if params['rot90']:
+    if params['rotate']:
+      img, labels = rotate_augment(img, labels)
+
+    if params['rotate90']:
       img, labels = rotate90_augment(img, labels)
 
     # Blur
     if params['blur']:
-      sigma = params['blur_sigma'] #3
-      prob = params['blur_prob'] #0.01
+      sigma = params['blur_sigma']
+      prob = params['blur_prob']
       img = blur_augment(img, sigma, prob)
 
     # Misalign
@@ -92,6 +99,28 @@ class Augmentor:
       p = params['circle_prob']
       r = params['circle_radius']
       img = circle_augment(img, p, r)
+
+    if params['grey']:
+      raise NotImplementedError
+
+    if params['noise']:
+      sigma = params['noise_sigma']
+      img = noise_augment(img, sigma)
+
+    if params['sin']:
+      a = params['sin_a']
+      f = params['sin_f']
+      img = sin_augment(img, a, f)
+
+    if params['box']:
+      n = params['box_n']
+      r = params['box_r']
+      z = params['box_z']
+      fill = params['box_fill']
+      img = box_augment(img, n, r, z, fill)
+
+    img = np.copy(img).astype(np.float32)
+    labels = [np.copy(l) for l in labels]
 
     # Return
     if labels == []:
