@@ -9,12 +9,16 @@ def flip_augment(img, labels):
   """
   # z flip
   if np.random.rand() < 0.5:
-    img = np.flip(img, axis=0)
-    labels = [np.flip(l, axis=0) for l in labels]
+    img, labels = flip(img, labels, 0)
 
   # x flip
   if np.random.rand() < 0.5:
-    img = np.flip(img, axis=1)
-    labels = [np.flip(l, axis=1) for l in labels]
+    img, labels = flip(img, labels, 1)
+
+  return img, labels
+
+def flip(img, labels, axis):
+  img = np.flip(img, axis=axis)
+  labels = [np.flip(l, axis=axis) for l in labels]
 
   return img, labels

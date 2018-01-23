@@ -1,5 +1,5 @@
 import numpy as np
-from skimage.draw import circle
+from skimage import draw
 
 def circle_augment(img, p, max_r):
   """Performs circle augmentation on img (simulate dirt).
@@ -14,8 +14,14 @@ def circle_augment(img, p, max_r):
     z, y, x, ch = img.shape
     r = np.random.rand() * max_r
     zc, yc, xc = np.random.randint(z), np.random.randint(y), np.random.randint(x)
-    yy, xx = circle(yc, xc, r, shape=(y,x))
 
-    img[zc, yy, xx, :] = 0.0
+    img = circle(img, zc, yc, xc, r)
+
+  return img
+
+def circle(img, zc, yc, xc, r):
+  z, y, x, ch = img.shape
+  yy, xx = draw.circle(yc, xc, r, shape=(y,x))
+  img[zc, yy, xx, :] = 0.0
 
   return img
