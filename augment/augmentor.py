@@ -7,7 +7,8 @@ from .circle import circle_augment
 from .elastic_warp import elastic_warp_augment
 from .flip import flip_augment
 from .grey import grey_augment
-from .misalign import misalign_augment
+from .misalign_slip import misalign_augment
+from .misalign_translation import misalign_translation_augment
 from .missing_section import missing_section_augment
 from .noise import noise_augment
 from .rotate import rotate_augment
@@ -22,8 +23,8 @@ class Augmentor:
 
   def _init_params(self):
     augs = ['blur', 'box', 'circle', 'elastic_warp', 'flip', 'grey',
-            'misalign', 'missing_section', 'noise', 'rotate', 'rotate90',
-            'rescale', 'sin']
+            'misalign_slip', 'misalign_translation', 'missing_section',
+            'noise', 'rotate', 'rotate90', 'rescale', 'sin']
     for aug in augs:
       if aug not in self.params.keys():
         self.params[aug] = False
@@ -53,10 +54,11 @@ class Augmentor:
 
     # Elastic warp
     if params['elastic_warp']:
+      d = params['elastic_d']
       n = params['elastic_n']
-      max_sigma = params['elastic_sigma']
+      sigma = params['elastic_sigma']
 
-      img, labels = elastic_warp_augment(img, labels, n, max_sigma)
+      img, labels = elastic_warp_augment(img, labels, d, n, sigma)
 
     # Flip
     if params['flip']:
@@ -75,13 +77,19 @@ class Augmentor:
       prob = params['blur_prob']
       img = blur_augment(img, sigma, prob)
 
-    # Misalign
-    if params['misalign']:
-      p = params['misalign_prob']
-      delta = params['misalign_delta']
-      type = params['misalign_type']
-      shift_labels = params['misalign_label_shift']
-      img, labels = misalign_augment(img, labels, p, delta, type, shift_labels)
+    # Misalign slip
+    if params['misalign_slip']:
+      p = params['misalign_slip_prob']
+      delta = params['misalign_slip_delta']
+      shift_labels = params['misalign_slip_shift_labels']
+      img, labels = misalign_slip_augment(img, labels, p, delta, type, shift_labels)
+
+    # Misalign translation      
+    if params['misalign_translation']:
+      p = params['misalign_translation_prob']
+      delta = params['misalign_translation_delta']
+      shift_labels = params['misalign_translation_shift_labels']
+      img, labels = misalign_translation_augment(img, labels, p, delta, type, shift_labels)
 
     # Missing Section
     if params['missing_section']:

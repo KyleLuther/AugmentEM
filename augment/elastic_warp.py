@@ -2,18 +2,27 @@ import numpy as np
 from scipy.interpolate import RectBivariateSpline
 from scipy.ndimage.interpolation import map_coordinates
 
-def elastic_warp_augment(img, labels, n, max_sigma, clamp_borders=True):
+def elastic_warp_augment(img, labels, d, n, max_sigma, clamp_borders=True):
   """Performs elastic deformation on img. Warp all sections the same
 
     Args:
       img: (np array: <z,y,x,ch>) image to augment
       labels: list of (np array: <z,y,x,ch>) labels of image
+      d: either 2: apply differenly to each slice or 3: apply same to all slices
       n: number of grid points, must be >= 4
       max_sigma: max distance to displace grid point
       clamp_borders: bool, if True does not distort image at borders
   """
   # generate sparse displacements
-  dxs, dys = create_displacements(n, max_sigma, clamp_borders)
+  z,y,x,ch = img.shape
+  if d == 2:
+    _dxs, _dys = create_displacements(n, max_sigma, clamp_borders)
+    dxs, dys = [_dxs for _z in range(z)], [_dys for _z in range(z)]
+  elif d == 3:
+    ds = [create_displacements(n, max_sigma, clamp_borders) for _z in range(z)]
+    dxs, dys = [d[0] for d in ds], [d[1] for d in ds]
+  else:
+    raise ValueError('Unrecognized value of d, {}'.format(d))
 
   # apply sparse displacements
   img, labels = elastic_warp(img, labels, dxs, dys)
@@ -28,14 +37,12 @@ def elastic_warp(img, labels, dxs, dys):
   img = np.copy(img)
   labels = [np.copy(l) for l in labels]
 
-  # generate dense coordinate mapping
-  mapping = create_mapping(x, y, dxs, dys)
-
-  # apply coordinate mapping to each section
-  for i in range(z):
-    img[i] = apply_mapping(img[i], mapping, order=1)
+  # generate and apply coordinate mapping to each section
+  for _z in range(z):
+    mapping = create_mapping(x, y, dxs[_z], dys[_z])
+    img[_z] = apply_mapping(img[_z], mapping, order=1)
     for l in labels:
-      l[i] = apply_mapping(l[i], mapping, order=0)
+      l[_z] = apply_mapping(l[_z], mapping, order=0)
 
   return img, labels
 
