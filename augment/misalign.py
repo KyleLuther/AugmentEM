@@ -26,26 +26,27 @@ def misalign_augment(img, labels, p, delta, type, shift_labels):
   return img, labels
 
 def apply_slip(img, labels, z, dx, dy, shift_labels):
-  _, x, y, _ = img.shape
-  ly = max(dy,0)
-  uy = min(y+dy,y)
-  lx = max(dx, 0)
-  ux = min(x+dx,x)
+  _, y, x, _ = img.shape
+  lx1, ly1 = max(dx, 0), max(dy, 0)
+  lx2, ly2 = max(-dx, 0), max(-dy, 0)
+  ux1, uy1 = min(x+dx,x), max(y+dy, 0)
+  ux2, uy2 = min(x-dx,x), max(y-dy, 0)
 
   slip = np.zeros_like(img[z])
-  slip[ly:uy,lx:ux] = img[z,ly:uy,lx:ux]
+  slip[ly1:uy1,lx1:ux1] = img[z,ly2:uy2,lx2:ux2]
   img[z] = slip
 
   if shift_labels:
     for l in labels:
       slip = np.zeros_like(l[z])
-      slip[ly:uy,lx:ux] = l[z,ly:uy,lx:ux]
+      slip[ly1:uy1,lx1:ux1] = l[z,ly2:uy2,lx2:ux2]
       l[z] = slip
 
   return img, labels
 
 def apply_translation(img, labels, z, dx, dy):
-  _, x, y, _ = img.shape
+  _, y,x, _ = img.shape
+  raise NotImplementedError
   ly = max(dy,0)
   uy = min(y+dy,y)
   lx = max(dx, 0)
