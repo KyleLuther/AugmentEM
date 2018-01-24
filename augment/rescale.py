@@ -6,7 +6,7 @@ def rescale_augment(img, labels, min_f, max_f):
 
   Args:
     img: (np array: <z,y,x,ch>) image
-    labels: (np array: <z,y,x,ch>) labeling of img
+    labels: list of (np array: <z,y,x,ch>) labeling of img
     min_f: min rescale factor
     max_f: max rescale factor
   """

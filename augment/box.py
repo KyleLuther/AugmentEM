@@ -1,15 +1,14 @@
 import numpy as np
 
 def box_augment(img, max_n, max_r, max_z, fill):
-  """Performs box augmentation on img.
-      Fills random box regions of image with zeros or noise
+  """Fills random rectangular regions of image with zeros or noise
 
-    Args:
-      img: (np array: <z,y,x,channel>) image to augment
-      max_n: number of boxes
-      max_r: max size of box in xy
-      max_z: max size of box in z
-      fill: 'zero' or 'noise'
+  Args:
+    img: (np array: <z,y,x,ch>) image
+    max_n: max number of boxes
+    max_r: max size of box in xy
+    max_z: max size of box in z
+    fill: 'zero' or 'noise'
   """
   n = np.random.randint(max_n)
   for i in range(n):

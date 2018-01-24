@@ -1,11 +1,11 @@
 import numpy as np
 
 def misalign_slip_augment(img, labels, p, delta, shift_labels):
-  """Performs misalignment augmentation on img.
+  """Performs misalignment augmentation on img. Misalign one section
 
   Args:
     img: (np array: <z,y,x,ch>) image
-    labels: list of [(np array: <z,y,x,ch>)] labeling of img
+    labels: list of (np array: <z,y,x,ch>) labeling of img
     p: probability to apply augmentation
     delta: max distance to misalign
     shift_labels: if True, shift labels too

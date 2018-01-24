@@ -3,15 +3,15 @@ from scipy.interpolate import RectBivariateSpline
 from scipy.ndimage.interpolation import map_coordinates
 
 def elastic_warp_augment(img, labels, d, n, max_sigma, clamp_borders=True):
-  """Performs elastic deformation on img. Warp all sections the same
+  """Performs elastic deformation on img.
 
-    Args:
-      img: (np array: <z,y,x,ch>) image to augment
-      labels: list of (np array: <z,y,x,ch>) labels of image
-      d: either 2: apply differenly to each slice or 3: apply same to all slices
-      n: number of grid points, must be >= 4
-      max_sigma: max distance to displace grid point
-      clamp_borders: bool, if True does not distort image at borders
+  Args:
+    img: (np array: <z,y,x,ch>) image 
+    labels: list of (np array: <z,y,x,ch>) labeling of image
+    d: either 2: apply differenly to each slice or 3: apply same to all slices
+    n: number of grid points, must be >= 4
+    max_sigma: max distance to displace grid point
+    clamp_borders: bool, if True does not distort image at borders
   """
   # generate sparse displacements
   z,y,x,ch = img.shape

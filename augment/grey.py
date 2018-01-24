@@ -14,6 +14,7 @@ def grey_augment(img, max_contrast=0.15, max_brightness=0.15, max_gamma=1.0):
     brightness: (float) max amount to change brightness
     gamma: (float) max amount of gamma to use
   """
+  raise NotImplementedError
   constrast = 2*(np.random.rand() - 0.5)*max_contrast
   brightness = 2*(np.random.rand() - 0.5)*max_brightness
   gamma = 2*(np.random.rand() - 1)*max_gamma

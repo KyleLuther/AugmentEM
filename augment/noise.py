@@ -5,7 +5,7 @@ def noise_augment(img, max_sigma):
   """Adds random gaussian noise to image.
 
     Args:
-      img: (np array: <z,y,x,channel>) image to augment
+      img: (np array: <z,y,x,channel>) image 
       sigma: max standard deviation of Gaussian filter used to blur image
   """
   sigma = max_sigma*np.random.rand()

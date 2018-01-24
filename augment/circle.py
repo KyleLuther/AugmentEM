@@ -2,14 +2,15 @@ import numpy as np
 from skimage import draw
 
 def circle_augment(img, p, max_r):
-  """Performs circle augmentation on img (simulate dirt).
+  """Performs circle augmentation on img (simulate dirt and tears).
       Zeros out circular region of image
 
-    Args:
-      img: (np array: <z,y,x,channel>) image to augment
-      p: probability to perform augmentation
-      max_r: max radius of circle
+  Args:
+    img: (np array: <z,y,x,ch>) image
+    p: probability to perform augmentation
+    max_r: max radius of circle
   """
+  raise NotImplementedError
   if np.random.rand() < p:
     z, y, x, ch = img.shape
     r = np.random.rand() * max_r

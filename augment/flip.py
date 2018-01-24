@@ -5,7 +5,7 @@ def flip_augment(img, labels):
 
   Args:
     img: (np array: <z,y,x,ch>) image
-    labels: (np array: <z,y,x,ch>) labeling of img
+    labels: list of (np array: <z,y,x,ch>) labeling of img
   """
   # z flip
   if np.random.rand() < 0.5:

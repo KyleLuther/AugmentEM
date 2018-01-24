@@ -24,5 +24,4 @@ def sin(img, a, f, phi, theta):
   yy,xx = np.mgrid[:y,:x]
   zz = np.sin(theta) * yy + np.cos(theta) * xx
   ss = np.expand_dims(np.sin(2 * np.pi * f * zz + phi), -1)
-  #return img + a * np.sin(2 * np.pi * f * np.arange(img.shape[0])+phi).reshape((img.shape[0],1))
   return img + a * ss
