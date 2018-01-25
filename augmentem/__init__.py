@@ -1,1 +1,1 @@
-from .augment.augmentor import Augmentor
+from .augmentor import Augmentor
