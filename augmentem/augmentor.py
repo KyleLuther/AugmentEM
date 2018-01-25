@@ -7,7 +7,7 @@ from .circle import circle_augment
 from .elastic_warp import elastic_warp_augment
 from .flip import flip_augment
 from .grey import grey_augment
-from .misalign_slip import misalign_augment
+from .misalign_slip import misalign_slip_augment
 from .misalign_translation import misalign_translation_augment
 from .missing_section import missing_section_augment
 from .noise import noise_augment
