@@ -8,17 +8,17 @@ def elastic_warp_augment(img, labels, d, n, max_sigma, clamp_borders=True):
   Args:
     img: (np array: <z,y,x,ch>) image 
     labels: list of (np array: <z,y,x,ch>) labeling of image
-    d: either 2: apply differenly to each slice or 3: apply same to all slices
+    d: either 'unique': apply differenly to each slice or 'same': apply same to all slices
     n: number of grid points, must be >= 4
     max_sigma: max distance to displace grid point
     clamp_borders: bool, if True does not distort image at borders
   """
   # generate sparse displacements
   z,y,x,ch = img.shape
-  if d == 2:
+  if d == 'same':
     _dxs, _dys = create_displacements(n, max_sigma, clamp_borders)
     dxs, dys = [_dxs for _z in range(z)], [_dys for _z in range(z)]
-  elif d == 3:
+  elif d == 'unique':
     ds = [create_displacements(n, max_sigma, clamp_borders) for _z in range(z)]
     dxs, dys = [d[0] for d in ds], [d[1] for d in ds]
   else:
