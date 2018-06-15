@@ -37,6 +37,6 @@ def _misalign_translation(arr, dz, dy, dx):
 
   tran = np.zeros_like(arr)
   tran[:dz] = arr[:dz]
-  tran[dz:,ly1:uy1,lx1:ux1] = tran[dz:,ly2:uy2,lx2:ux2]
+  tran[dz:,ly1:uy1,lx1:ux1] = arr[dz:,ly2:uy2,lx2:ux2]
 
   return tran
