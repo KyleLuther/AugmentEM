@@ -1,7 +1,7 @@
 import numpy as np
 from skimage import transform
 
-def rescale_augment(img, labels, min_f, max_f):
+def rescale_augment(img, labels, min_f, max_f, mode):
   """Performs flip augmentation on img. (Only rescale in xy)
 
   Args:
@@ -9,28 +9,29 @@ def rescale_augment(img, labels, min_f, max_f):
     labels: list of (np array: <z,y,x,ch>) labeling of img
     min_f: min rescale factor
     max_f: max rescale factor
+    mode: how to pad image 
   """
   z,y,x,ch = img.shape
   fx = min_f + np.random.rand()*(max_f-min_f)
   fy = min_f + np.random.rand()*(max_f-min_f)
-  img = rescale(img, fx, fy, 3)
-  labels = [rescale(l, fx, fy, 0) for l in labels]
+  img = rescale(img, fx, fy, 3, mode)
+  labels = [rescale(l, fx, fy, 0, mode) for l in labels]
 
   return img, labels
 
-def rescale(I, fx, fy, order):
+def rescale(I, fx, fy, order, mode):
   z,x,y,ch = I.shape
   for i, slc in enumerate(I):
     for c in range(ch):
       img = slc[:,:,c]
       # Scale
       img = transform.rescale(img, (fx,fy), order=order,
-              preserve_range=True, mode='constant').astype(slc.dtype)
+                              preserve_range=True, mode=mode).astype(slc.dtype)
 
       # Pad
       Y = max(0,y-img.shape[0])
       X = max(0,x-img.shape[1])
-      img = np.pad(img, ((Y//2,Y-Y//2),(X//2,X-X//2)),mode='constant')
+      img = np.pad(img, ((Y//2,Y-Y//2),(X//2,X-X//2)),mode=mode)
 
       # Crop
       Y = img.shape[0] - y
