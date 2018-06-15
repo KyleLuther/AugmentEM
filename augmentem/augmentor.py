@@ -52,6 +52,25 @@ class Augmentor:
     img = np.copy(img)
     labels = [np.copy(l) for l in labels]
 
+    # Flip
+    if params['flip']:
+      img, labels = flip_augment(img, labels)
+
+    # Rotate
+    if params['rotate']:
+      mode = params['rotate_mode']
+      img, labels = rotate_augment(img, labels, mode)
+
+    if params['rotate90']:
+      img, labels = rotate90_augment(img, labels)
+
+    # Rescale
+    if params['rescale']:
+      min_f = params['rescale_min']
+      max_f = params['rescale_max']
+      mode = params['rescale_mode']
+      img, labels = rescale_augment(img, labels, min_f, max_f, mode)
+
     # Elastic warp
     if params['elastic_warp']:
       d = params['elastic_d']
@@ -59,18 +78,7 @@ class Augmentor:
       sigma = params['elastic_sigma']
 
       img, labels = elastic_warp_augment(img, labels, d, n, sigma)
-
-    # Flip
-    if params['flip']:
-      img, labels = flip_augment(img, labels)
-
-    # Rotate
-    if params['rotate']:
-      img, labels = rotate_augment(img, labels)
-
-    if params['rotate90']:
-      img, labels = rotate90_augment(img, labels)
-
+      
     # Blur
     if params['blur']:
       sigma = params['blur_sigma']
@@ -97,11 +105,6 @@ class Augmentor:
       fill = params['missing_section_fill']
       img = missing_section_augment(img, p, fill)
 
-    # Rescale
-    if params['rescale']:
-      min_f = params['rescale_min']
-      max_f = params['rescale_max']
-      img, labels = rescale_augment(img, labels, min_f, max_f)
 
     # Circle
     if params['circle']:
@@ -112,7 +115,7 @@ class Augmentor:
 
     if params['grey']:
       raise NotImplementedError
-
+    
     if params['noise']:
       sigma = params['noise_sigma']
       img = noise_augment(img, sigma)
