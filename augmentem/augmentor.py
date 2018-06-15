@@ -82,19 +82,20 @@ class Augmentor:
       p = params['misalign_slip_prob']
       delta = params['misalign_slip_delta']
       shift_labels = params['misalign_slip_shift_labels']
-      img, labels = misalign_slip_augment(img, labels, p, delta, type, shift_labels)
+      img, labels = misalign_slip_augment(img, labels, p, delta, shift_labels)
 
     # Misalign translation      
     if params['misalign_translation']:
       p = params['misalign_translation_prob']
       delta = params['misalign_translation_delta']
       shift_labels = params['misalign_translation_shift_labels']
-      img, labels = misalign_translation_augment(img, labels, p, delta, type, shift_labels)
+      img, labels = misalign_translation_augment(img, labels, p, delta, shift_labels)
 
     # Missing Section
     if params['missing_section']:
       p = params['missing_section_prob']
-      img = missing_section_augment(img, p)
+      fill = params['missing_section_fill']
+      img = missing_section_augment(img, p, fill)
 
     # Rescale
     if params['rescale']:
