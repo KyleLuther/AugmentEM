@@ -8,8 +8,9 @@ def missing_section_augment(img, p, fill):
     p: probability to apply augmentation
     fill: 'zero' or 'noise'
   """
-  if np.random.rand() < p:
-    img[z] = missing_section(img[z], fill)
+  for z in range(img.shape[0]):
+    if np.random.rand() < p:
+      img[z] = missing_section(img[z], fill)
 
   return img
 
@@ -18,6 +19,7 @@ def missing_section(img, fill):
     img = np.zeros_like(img)
   elif fill == 'noise':
     sigma = np.std(img)
-    img = sigma*np.sqrt(12)*(np.random.rand(*(img.shape))-0.5)
+    mu = np.mean(img)
+    img = mu + sigma*np.sqrt(12)*(np.random.rand(*(img.shape))-0.5)
 
   return img
