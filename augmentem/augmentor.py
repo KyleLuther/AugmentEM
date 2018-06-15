@@ -107,7 +107,8 @@ class Augmentor:
     if params['circle']:
       p = params['circle_prob']
       r = params['circle_radius']
-      img = circle_augment(img, p, r)
+      fill = params['circle_fill']
+      img = circle_augment(img, p, r, fill)
 
     if params['grey']:
       raise NotImplementedError
