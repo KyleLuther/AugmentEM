@@ -19,7 +19,7 @@ def circle_augment(img, p, max_r, fill_list):
       yc, xc = np.random.randint(y), np.random.randint(x)
       fill = np.random.choice(fill_list)
       
-      img = circle(img[z], yc, xc, r, fill)
+      img[z] = circle(img[z], yc, xc, r, fill)
 
   return img
 
