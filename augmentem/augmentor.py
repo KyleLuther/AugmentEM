@@ -4,6 +4,7 @@ import numpy as np
 from .blur import blur_augment
 from .box import box_augment
 from .circle import circle_augment
+from .crop import crop_augment
 from .elastic_warp import elastic_warp_augment
 from .flip import flip_augment
 from .grey import grey_augment
@@ -22,7 +23,7 @@ class Augmentor:
     self._init_params()
 
   def _init_params(self):
-    augs = ['blur', 'box', 'circle', 'elastic_warp', 'flip', 'grey',
+    augs = ['blur', 'box', 'circle', 'crop', 'elastic_warp', 'flip', 'grey',
             'misalign_slip', 'misalign_translation', 'missing_section',
             'noise', 'rotate', 'rotate90', 'rescale', 'sin']
     for aug in augs:
@@ -51,6 +52,12 @@ class Augmentor:
     params = self.params
     img = np.copy(img)
     labels = [np.copy(l) for l in labels]
+
+    # Crop
+    if params['crop']:
+      max_z = params['crop_z']
+      max_r = params['crop_r']
+      img, labels = crop_augment(img, labels, max_z, max_r)
 
     # Flip
     if params['flip']:
