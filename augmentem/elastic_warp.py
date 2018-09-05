@@ -73,14 +73,13 @@ def create_mapping(x,y,dxs,dys):
   dX = x_spline(np.arange(y), np.arange(x), grid=True)
   dY = y_spline(np.arange(y), np.arange(x), grid=True)
 
+  # generate coordinate mapping
   X, Y = np.meshgrid(np.arange(x), np.arange(y))
   X, Y = X+dX, Y+dY
 
   # clamp borders
-  X[0,:] = X[-1,:] = X[:,0] = X[:-1] = 0
-  Y[0,:] = Y[-1,:] = Y[:,0] = Y[:-1] = 0
+  X, Y = np.clip(X,0,x-1), np.clip(Y,0,y-1)
 
-  # generate coordinate mapping
   mapping = X.flatten(), Y.flatten()
 
   return mapping
