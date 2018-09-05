@@ -2,7 +2,7 @@ import numpy as np
 from scipy.interpolate import RectBivariateSpline
 from scipy.ndimage.interpolation import map_coordinates
 
-def elastic_warp_augment(img, labels, d, n, max_sigma, clamp_borders=True):
+def elastic_warp_augment(img, labels, d, n, max_sigma):
   """Performs elastic deformation on img.
 
   Args:
@@ -13,6 +13,7 @@ def elastic_warp_augment(img, labels, d, n, max_sigma, clamp_borders=True):
     max_sigma: max distance to displace grid point
     clamp_borders: bool, if True does not distort image at borders
   """
+  clamp_borders = True
   # generate sparse displacements
   z,y,x,ch = img.shape
   if d == 'same':
@@ -73,9 +74,14 @@ def create_mapping(x,y,dxs,dys):
   dY = y_spline(np.arange(y), np.arange(x), grid=True)
 
   X, Y = np.meshgrid(np.arange(x), np.arange(y))
+  X, Y = X+dX, Y+dY
+
+  # clamp borders
+  X[0,:] = X[-1,:] = X[:,0] = X[:-1] = 0
+  Y[0,:] = Y[-1,:] = Y[:,0] = Y[:-1] = 0
 
   # generate coordinate mapping
-  mapping = (Y+dY).flatten(), (X+dX).flatten()
+  mapping = X.flatten(), Y.flatten()
 
   return mapping
 
