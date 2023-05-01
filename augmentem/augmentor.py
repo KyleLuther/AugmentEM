@@ -16,6 +16,7 @@ from .rotate import rotate_augment
 from .rotate90 import rotate90_augment
 from .rescale import rescale_augment
 from .sin import sin_augment
+from .bc import bc_augment
 
 class Augmentor:
   def __init__(self, params):
@@ -122,6 +123,11 @@ class Augmentor:
 
     if params['grey']:
       raise NotImplementedError
+    
+    if params['bc']:
+      max_contrast = params['bc_contrast']
+      max_brightness = params['bc_brightness']
+      img = bc_augment(img, max_contrast, max_brightness)
     
     if params['noise']:
       sigma = params['noise_sigma']
